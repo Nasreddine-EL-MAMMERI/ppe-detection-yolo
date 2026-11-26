@@ -1,0 +1,16 @@
+.venv/
+venv/
+data/
+datasets/
+runs/
+*.pt
+*.onnx
+*.engine
+__pycache__/
+*.pyc
+conversion_warnings.log
+.ipynb_checkpoints/
+.DS_Store
+
+predictions/
+reports/

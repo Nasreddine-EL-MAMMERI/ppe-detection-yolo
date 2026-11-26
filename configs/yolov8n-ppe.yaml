@@ -1,0 +1,39 @@
+# Modele YOLO custom ultra-leger (variante YOLOv8n adaptee a 6 classes PPE).
+# Base : yolov8n.yaml mais depth/width reduits + max_channels 512 -> ~1.3 M parametres
+# (yolov8n classique = 3.2 M). Ideal CPU / Colab gratuit / Kaggle T4.
+#
+# depth_multiple : profondeur des blocs C2f
+# width_multiple : canaux
+# max_channels   : plafonne les canaux de la colonne vertébrale (gain enorme en RAM)
+
+nc: 6
+scales:
+  # [depth, width, max_channels]
+  nano_ppe: [0.25, 0.25, 512]
+
+backbone:
+  - [-1, 1, Conv, [16, 3, 2]]        # 0  P1/2
+  - [-1, 1, Conv, [32, 3, 2]]        # 1  P2/4
+  - [-1, 3, C2f, [32, True]]         # 2
+  - [-1, 1, Conv, [64, 3, 2]]        # 3  P3/8
+  - [-1, 6, C2f, [64, True]]         # 4
+  - [-1, 1, Conv, [128, 3, 2]]       # 5  P4/16
+  - [-1, 6, C2f, [128, True]]        # 6
+  - [-1, 1, Conv, [256, 3, 2]]       # 7  P5/32
+  - [-1, 3, C2f, [256, True]]        # 8
+  - [-1, 1, SPPF, [256, 5]]          # 9
+
+head:
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]  # 10
+  - [[-1, 6], 1, Concat, [1]]                    # 11
+  - [-1, 3, C2f, [128]]                          # 12
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]  # 13
+  - [[-1, 4], 1, Concat, [1]]                    # 14
+  - [-1, 3, C2f, [64]]                           # 15  P3 (petits objets : casques)
+  - [-1, 1, Conv, [64, 3, 2]]                    # 16
+  - [[-1, 12], 1, Concat, [1]]                   # 17
+  - [-1, 3, C2f, [128]]                          # 18  P4 (personnes)
+  - [-1, 1, Conv, [128, 3, 2]]                   # 19
+  - [[-1, 9], 1, Concat, [1]]                    # 20
+  - [-1, 3, C2f, [256]]                          # 21  P5
+  - [[15, 18, 21], 1, Detect, [nc]]              # 22
