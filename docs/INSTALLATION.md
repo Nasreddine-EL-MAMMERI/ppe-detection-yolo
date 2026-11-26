@@ -218,3 +218,67 @@ Sur Kaggle/Colab, tu passeras de toute façon par un upload de zip ou un Dataset
   zip : `scripts/`, `configs/`, `notebooks/`, `README.md`, `requirements.txt`.
 - Ajoute simplement `data/` (tes images) à côté.
 - Le venv, lui, doit être **dans `ppe-yolo/`** et rester activé dans le terminal intégré.
+
+
+---
+
+## ⚠️ Dépannage : dossier `ppe-yolo/ppe-yolo/ppe-yolo`
+
+Si ton terminal affiche `C:\Users\<toi>\ppe-yolo\ppe-yolo\ppe-yolo`, l'extraction a
+imbriqué les dossiers (l'extracteur Windows le fait quand il existe déjà un dossier du
+même nom). **Il ne faut pas créer le venv dans le dossier le plus profond** : il faut
+d'abord remettre l'arborescence à plat.
+
+### 1. Trouver le vrai dossier racine
+
+```powershell
+Get-ChildItem -Recurse -Filter requirements.txt -Path C:\Users\elhad\ppe-yolo |
+    Select-Object FullName
+```
+
+Le dossier qui **contient directement** `requirements.txt` (et `scripts/`, `configs/`,
+`notebooks/`, `README.md`) est la vraie racine. C'est le seul endroit où tu dois travailler.
+
+### 2. Aplatir (une seule fois)
+
+```powershell
+cd C:\Users\elhad
+Rename-Item ppe-yolo ppe-yolo_old
+Move-Item ppe-yolo_old\ppe-yolo\ppe-yolo ppe-yolo
+Remove-Item -Recurse -Force ppe-yolo_old
+```
+
+> Adapte la profondeur si tu as 4 niveaux au lieu de 3. Vérifie ensuite :
+> ```powershell
+> cd C:\Users\elhad\ppe-yolo
+> dir
+> ```
+> Tu dois voir **`scripts  configs  notebooks  README.md  requirements.txt`** — si tu vois
+> encore un dossier `ppe-yolo` seul, c'est qu'il reste un niveau.
+
+### 3. Créer le venv **ici**
+
+```powershell
+cd C:\Users\elhad\ppe-yolo        # <-- dossier contenant requirements.txt
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+Erreur fréquente, la plus courante sur Windows :
+
+```
+.\.venv\Scripts\Activate.ps1 : l'exécution de scripts est désactivée sur ce système
+```
+
+→ `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` puis relance l'activation.
+(Alternative si tu ne veux pas toucher à la policy : `.\.venv\Scripts\activate.bat` dans
+un terminal **Invite de commandes** au lieu de PowerShell.)
+
+### 4. Vérifier la version de Python
+
+`python -V` doit donner **3.10 à 3.12** idéalement. Si tu es en **3.13**, c'est supporté
+par torch ≥ 2.6, mais si `pip install` échoue sur `torch`, installe Python 3.11 ou 3.12
+depuis [python.org](https://www.python.org/downloads/) et recrée le venv avec
+`py -3.12 -m venv .venv`.
