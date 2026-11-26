@@ -55,7 +55,15 @@ La taille médiane des boîtes (0,13 × 0,20 de l'image) a fixé `imgsz=640` : e
 casques distants tombent sous 10 pixels après redimensionnement.
 
 ---
+## Exemples de détection
 
+| Ouvrier casqué | Casque hors contexte |
+| --- | --- |
+| ![exemple 1](docs/figures/exemples/exemple_126.jpg) | ![exemple 2](docs/figures/exemples/exemple_424.jpg) |
+
+![Détections multiples](docs/figures/exemples/exemple_1224.jpg)
+
+---
 ## Résultats
 
 ### Le détecteur
