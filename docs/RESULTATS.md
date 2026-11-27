@@ -1,4 +1,4 @@
-# Résultats finaux — Détection EPI chantier
+﻿# Résultats finaux — Détection EPI chantier
 
 ## 1. Le modèle (niveau détecteur)
 
@@ -131,51 +131,3 @@ plus d'augmentation (aucun sur-apprentissage), changer l'optimizer.
 
 ---
 
-## 7. Texte pour le README GitHub
-
-> **Résultats.** YOLOv8n entraîné sur 864 images, évalué sur 250 images de test jamais
-> vues : **mAP50 = 0.881**, mAP50-95 = 0.497, 4,7 ms/image sur T4.
->
-> L'écart de 38 points entre mAP50 et mAP50-95 est **uniforme sur les 6 classes**
-> (0.354 à 0.409), y compris sur `person` où le modèle est pourtant excellent. Cette
-> constance indique un plafond de qualité d'annotation plutôt qu'une limite de capacité :
-> aucune courbe ne montre de sur-apprentissage et l'early stopping a convergé à
-> l'epoch 63/100.
->
-> Au-delà de la mAP, la règle métier « personne sans casque » a été évaluée contre les
-> annotations : **précision 0.56, rappel 0.46**, avec un plafond structurel de 0.54 dû aux
-> 17 % de personnes non détectées. Le système est un outil de pré-tri nécessitant une
-> vérification humaine, pas un contrôle autonome.
-
----
-
-## 8. Texte pour le CV
-
-```
-Projet personnel — Détection d'EPI sur chantier, YOLOv8 / PyTorch
-• Pipeline data de bout en bout : conversion de 1330 annotations Pascal VOC vers YOLO,
-  split reproductible (864/216/250), contrôle qualité automatisé et vérification
-  visuelle des labels sur 1330 images.
-• Analyse du dataset : distribution des 6 classes (déséquilibre 42 %/5,6 %), taille
-  médiane des objets (casques 37-47 px) → choix de résolution justifié (640 px).
-• Entraînement GPU (Kaggle T4) avec early stopping, augmentation adaptée au domaine ;
-  évaluation finale sur set de test isolé : mAP50 = 0.881, mAP50-95 = 0.497.
-• Développement d'une règle métier EPI (personne sans casque) et évaluation du système
-  complet contre les annotations : précision 0.56, rappel 0.46, identification d'un
-  plafond structurel (17 % de personnes non détectées) et calibration des seuils par
-  classe selon le coût asymétrique des erreurs en sécurité.
-```
-
----
-
-## 9. Ce que tu sais faire maintenant, et que tu peux défendre
-
-1. **Pourquoi `imgsz=640` et pas 416** — casques de 37–47 px, stride 8.
-2. **Pourquoi pré-entraîné et pas from-scratch** — 864 images, transfert de features.
-3. **Pourquoi le test set n'est ouvert qu'une fois** — sinon la mesure devient un réglage.
-4. **Pourquoi la mAP ne suffit pas** — 0.881 en mAP et 0.46 de rappel métier : la moyenne
-   masque des erreurs systématiques sur une catégorie d'objets (personnes lointaines).
-5. **Pourquoi recall et précision n'ont pas le même coût** — rater une personne = ouvrier
-   non contrôlé ; inventer un casque = tête nue déclarée protégée.
-6. **Pourquoi s'arrêter** — le plafond est l'annotation et le rappel `person`, pas le
-   réglage du modèle. Le prouver par les chiffres est un raisonnement d'ingénieur.
