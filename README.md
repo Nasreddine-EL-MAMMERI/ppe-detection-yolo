@@ -235,7 +235,7 @@ ppe-detection-yolo/
 │   └── collect_figures.py   # sorts Kaggle run figures into docs/figures
 ├── configs/yolov8n-ppe.yaml # ultra-light variant (1.3 M params) for CPU
 ├── notebooks/               # ready-to-run Colab / Kaggle pipeline
-├── docs/                    # results, dataset analysis, Kaggle guide, installation (FR)
+├── docs/                    # detailed results and data licence (FR)
 ```
 
 ---
