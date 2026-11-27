@@ -87,6 +87,17 @@ casques distants tombent sous 10 pixels après redimensionnement.
 **Écart validation → test : −1 point de mAP50.** Le modèle généralise ; l'early stopping a
 convergé à l'epoch 63/100 et aucune courbe ne montre de sur-apprentissage.
 
+### Post-traitement : IoU et NMS
+
+Le NMS (Non-Maximum Suppression, seuil IoU 0,6) est appliqué par Ultralytics, puis complété
+par `deduplicate()` dans `predict.py` : au-delà du recouvrement classique, il écarte les
+boîtes **imbriquées** l'une dans l'autre (inclusion > 0,8) — le cas d'une personne détectée
+deux fois, une boîte « torse » dans une boîte « corps entier ».
+
+L'**IoU** est aussi le critère d'évaluation : mAP50 exige un recouvrement de 50 %,
+mAP50-95 moyenne les scores jusqu'à 95 %. L'écart de 38 points entre les deux mesure donc
+la **précision de localisation**, pas la détection : le modèle trouve les bons objets, mais
+les boîtes annotées ne sont pas assez serrées pour soutenir un IoU de 0,9.
 ### Le système (règle « personne sans casque »)
 
 Évaluée contre les annotations de test (93 violations réelles sur 1649 objets) :
