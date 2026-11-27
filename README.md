@@ -1,4 +1,4 @@
-# Construction Site PPE Detection — YOLOv8
+﻿# Construction Site PPE Detection — YOLOv8
 
 Six-class personal protective equipment (PPE) detection on construction site images,
 with end-to-end evaluation of the **full system** (the "worker without helmet" business
@@ -236,7 +236,6 @@ ppe-detection-yolo/
 ├── configs/yolov8n-ppe.yaml # ultra-light variant (1.3 M params) for CPU
 ├── notebooks/               # ready-to-run Colab / Kaggle pipeline
 ├── docs/                    # results, dataset analysis, Kaggle guide, installation (FR)
-└── tools/                   # Windows utilities (directory cleanup)
 ```
 
 ---
@@ -280,10 +279,5 @@ augmentation (no overfitting), changing the optimizer.
 
 ## Further reading
 
-Detailed documentation is written in French:
-
-- [Detailed results at three levels](docs/RESULTATS.md)
-- [Dataset analysis](docs/ANALYSE_DATASET.md)
-- [Decisions and improvement paths](docs/PISTES_AMELIORATION.md)
-- [Installation guide](docs/INSTALLATION.md)
-- [Running the training on Kaggle](docs/GUIDE_KAGGLE.md)
+- [Detailed results and method](docs/RESULTATS.md) - detector metrics, threshold calibration, business-rule evaluation, structural ceiling (French)
+- [Data licence note](docs/LICENCE_DONNEES.md) (French)
